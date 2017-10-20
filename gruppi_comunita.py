@@ -2,22 +2,7 @@
 
 import argparse
 import random
-
-all_members = (('Ana',),
-               ('Enrique', 'Concha'),
-               ('Ester',),
-               ('Federico', 'Teresa'),
-               ('Giancarlo',),
-               ('Giuseppe', 'Noemi'),
-               ('Isabel',),
-               ('Juanita',),
-               ('Marcelo', 'Chantal'),
-               ('Maria',),
-               ('Marta',),
-               ('Michele', 'Federica'),
-               ('Philippe',),
-               ('Tommaso', 'Laura')
-               )
+from gruppi_preparazione.classes import AllMembers
 
 
 def get_arguments():
@@ -82,7 +67,8 @@ def main():
     print('Escludo i seguenti membri dai gruppi: {r}'.format(r=to_remove))
     members_per_group = args.get('number')
     print('Genero gruppi di {n} persone'.format(n=members_per_group))
-    format_groups(all_members, members_per_group, to_remove)
+    all_members = AllMembers()
+    format_groups(all_members.get_members(), members_per_group, to_remove)
 
 
 if __name__ == '__main__':
