@@ -2,7 +2,7 @@
 
 import argparse
 import random
-from gruppi_preparazione.classes import AllMembers
+import gruppi_preparazione.classes as gr
 
 
 def get_arguments():
@@ -13,11 +13,6 @@ def get_arguments():
     return vars(args)
 
 
-def copy_list(members):
-    members_list = [(x, len(x)) for x in members]
-    return members_list
-
-
 def remove_members(members_list, to_remove):
     for nome in to_remove:
         members_list.remove((nome, len(nome)))
@@ -25,7 +20,6 @@ def remove_members(members_list, to_remove):
 
 
 def generate_groups(members, members_per_group, to_remove=None):
-    members = copy_list(members)
     members = remove_members(members, to_remove)
     groups = []
     while len(members) > 0:
@@ -67,8 +61,8 @@ def main():
     print('Escludo i seguenti membri dai gruppi: {r}'.format(r=to_remove))
     members_per_group = args.get('number')
     print('Genero gruppi di {n} persone'.format(n=members_per_group))
-    all_members = AllMembers()
-    format_groups(all_members.get_members(), members_per_group, to_remove)
+    all_members = gr.AllMembers()
+    format_groups(all_members.get_members_list(), members_per_group, to_remove)
 
 
 if __name__ == '__main__':

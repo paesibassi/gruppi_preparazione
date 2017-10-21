@@ -21,3 +21,7 @@ class AllMembers:
 
     def get_members(self):
         return self._members
+
+    def get_members_list(self):
+        members_list = [(x, len(x)) for x in self._members]
+        return members_list
