@@ -1,10 +1,44 @@
+# import pytest
+import random
 import gruppi_preparazione.classes as gr
 
-def test_AllMembers_init():
-    ana = ('Ana',)
-    ruiz = (('Ana',),('Enrique','Concha'))
-    assert len(gr.AllMembers().get_members_list()) == 14
-    assert len(gr.AllMembers(ana).get_members_list()) == 1
-    assert len(gr.AllMembers(ruiz).get_members_list()) == 2
 
-    assert (('Federico', 'Teresa'), 2) in gr.AllMembers().get_members_list()
+def test_allmembers_init(capsys):
+    gr.AllMembers()
+    out, err = capsys.readouterr()
+    assert out == 'Must provide a file path, returning empty list\n'
+
+    gr.AllMembers('notfound')
+    out, err = capsys.readouterr()
+    assert out == 'Could not find the file, returning empty list\n'
+
+
+def test_allmembers_members():
+    path = './members_example.json'
+    allmembers = gr.AllMembers(path)
+
+    assert len(allmembers.get_members()) == 14
+
+    assert ('Federico', 'Teresa') in allmembers.get_members()
+    assert ('Giancarlo',) in allmembers.get_members()
+
+    assert len(allmembers.get_members('wednesday')) == 13
+    assert ('Ana',) not in allmembers.get_members('wednesday')
+    assert ('Giancarlo',) in allmembers.get_members('wednesday')
+    assert ('Giancarlo',) not in allmembers.get_members('saturday')
+
+
+def test_allmembers_groups():
+    path = './members_example.json'
+    allmembers = gr.AllMembers(path)
+
+    random.seed(12345)
+
+    assert isinstance(allmembers.get_groups(), list)
+    assert isinstance(allmembers.get_groups(5), list)
+    assert isinstance(allmembers.get_groups(3, 'wednesday'), list)
+    assert [('Federico', 'Teresa'), ('Philippe',)] in allmembers.get_groups(3)
+    assert len(allmembers.get_groups(3)) == 6
+    assert len(allmembers.get_groups(5, 'saturday')) == 3
+    assert [('Maria',), ('Marcelo', 'Chantal'), ('Enrique', 'Concha')] in \
+        allmembers.get_groups(5, 'saturday')

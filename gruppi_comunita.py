@@ -1,7 +1,6 @@
 #!/usr/local/bin/python3
 
 import argparse
-import random
 import gruppi_preparazione.classes as gr
 
 
@@ -13,56 +12,26 @@ def get_arguments():
     return vars(args)
 
 
-def remove_members(members_list, to_remove):
-    for nome in to_remove:
-        members_list.remove((nome, len(nome)))
-    return members_list
+def assign_arguments(args):
+    to_remove = []
+    # for name in args.get('remove'):
+    #     name = tuple(name.split(','))
+    #     to_remove.append(name)
+    # print('Escludo i seguenti membri dai gruppi: {r}'.format(r=to_remove))
 
+    members_per_group = args.get('number')
+    print('Genero gruppi di {n} persone'.format(n=members_per_group))
 
-def generate_groups(members, members_per_group, to_remove=None):
-    members = remove_members(members, to_remove)
-    groups = []
-    while len(members) > 0:
-        group, people = [], 0
-        while people < members_per_group and len(members) > 0:
-            member = members.pop(random.randrange(len(members)))
-            people += member[1]
-            group.append(member[0])
-        groups.append(group)
-    return groups
-
-
-def format_groups(members, members_per_group, to_remove):
-    group = generate_groups(members, members_per_group, to_remove)
-    for g, group in enumerate(group, start=1):
-        print('Gruppo', g, end=': ')
-        components = len(group)
-        for m, member in enumerate(group, start=1):
-            num_pers = len(member)
-            if num_pers == 1:
-                print(member[0], end='')
-            elif num_pers == 2:
-                print(member[0], '&', member[1], end='')
-            else:
-                raise ValueError('Only single members or couples are supported.')
-            if m < components:
-                print(', ', end='')
-        print('')
-    return None
+    return members_per_group, to_remove
 
 
 def main():
     args = get_arguments()
-    to_remove = []
-    for name in args.get('remove'):
-        name = tuple(name.split(','))
-        to_remove.append(name)
-    to_remove = tuple(to_remove)
-    print('Escludo i seguenti membri dai gruppi: {r}'.format(r=to_remove))
-    members_per_group = args.get('number')
-    print('Genero gruppi di {n} persone'.format(n=members_per_group))
-    all_members = gr.AllMembers()
-    format_groups(all_members.get_members_list(), members_per_group, to_remove)
+    members_per_group, to_remove = assign_arguments(args)  # TODO capture weekday
+
+    all_members = gr.AllMembers('persone.json')  # TODO capture path
+    print(all_members.get_groups(members_per_group, 'saturday'))
+    all_members.get_groups_string(members_per_group, 'saturday')
 
 
 if __name__ == '__main__':
