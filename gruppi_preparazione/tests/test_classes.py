@@ -1,4 +1,4 @@
-# import pytest
+import pytest
 import random
 import gruppi_preparazione.classes as gr
 
@@ -26,6 +26,12 @@ def test_allmembers_members():
     assert ('Ana',) not in allmembers.get_members('wednesday')
     assert ('Giancarlo',) in allmembers.get_members('wednesday')
     assert ('Giancarlo',) not in allmembers.get_members('saturday')
+
+    assert len(allmembers.get_members('sunday')) == 13
+    assert ('Federico', 'Teresa') not in allmembers.get_members('sunday')
+
+    with pytest.raises(ValueError):
+        allmembers.get_members('another')
 
 
 def test_allmembers_groups():

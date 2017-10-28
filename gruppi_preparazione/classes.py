@@ -9,14 +9,13 @@ class AllMembers:
                 data = json.load(data_file)
                 self.__name = data['name']
                 self.__members = self.__build_tuple_list(data['members'])
-                self.__wednesday = self.__build_tuple_list(data['wednesday'])
-                self.__saturday = self.__build_tuple_list(data['saturday'])
+                self.__exclusions = {k: self.__build_tuple_list(data['exclusions'].get(k)) for k in data['exclusions']}
         except TypeError:
             print('Must provide a file path, returning empty list')
-            self.__members, self.__wednesday, self.__saturday = [],[],[]
+            self.__members, self.__exclusions = [],{}
         except (NameError, FileNotFoundError):
             print('Could not find the file, returning empty list')
-            self.__members, self.__wednesday, self.__saturday = [], [], []
+            self.__members, self.__exclusions = [], {}
 
     def __build_tuple_list(self, data: object) -> list:
         return [tuple([y.strip() for y in x.split('&')]) for x in data]
@@ -24,9 +23,10 @@ class AllMembers:
     def get_members(self, weekday=None):
         if weekday is None:
             return self.__members
-        elif weekday == 'wednesday': to_remove = self.__wednesday
-        elif weekday == 'saturday': to_remove = self.__saturday
-        else: raise ValueError('Weekday not yet supported.')
+        elif weekday in self.__exclusions.keys():
+            to_remove = self.__exclusions.get(weekday)
+        else:
+            raise ValueError('Weekday not specified in json data file.')
 
         members = self.__members[:]
         for nome in to_remove:
@@ -50,7 +50,7 @@ class AllMembers:
             groups.append(group)
         return groups
 
-    def get_groups_string(self, members_per_group=4, weekday=None):
+    def print_groups(self, members_per_group=4, weekday=None):
         groups = self.get_groups(members_per_group, weekday)
         for g, group in enumerate(groups, start=1):
             print('Gruppo {g}: '.format(g=g), end='')
@@ -67,3 +67,13 @@ class AllMembers:
                     print(', ', end='')
             print('')
         return None
+
+
+def main():
+    path = 'tests/members_example.json'
+    all_members = AllMembers(path)
+    all_members.print_groups(4, 'sunday')
+
+
+if __name__ == '__main__':
+    main()
