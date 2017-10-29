@@ -12,12 +12,13 @@ class AllMembers:
                 self.__exclusions = {k: self.__build_tuple_list(data['exclusions'].get(k)) for k in data['exclusions']}
         except TypeError:
             print('Must provide a file path, returning empty list')
-            self.__members, self.__exclusions = [],{}
+            self.__members, self.__exclusions = [], {}
         except (NameError, FileNotFoundError):
             print('Could not find the file, returning empty list')
             self.__members, self.__exclusions = [], {}
 
-    def __build_tuple_list(self, data: object) -> list:
+    @staticmethod
+    def __build_tuple_list(data):
         return [tuple([y.strip() for y in x.split('&')]) for x in data]
 
     def get_members(self, weekday=None):
@@ -33,13 +34,13 @@ class AllMembers:
             members.remove(nome)
         return members
 
-    def __get_members_list(self, members):
+    def __get_members_list(self, weekday):
+        members = self.get_members(weekday)
         members_list = [(x, len(x)) for x in members]
         return members_list
 
     def get_groups(self, members_per_group=4, weekday=None):
-        members = self.get_members(weekday)
-        members_list = self.__get_members_list(members)
+        members_list = self.__get_members_list(weekday)
         groups = []
         while len(members_list) > 0:
             group, people = [], 0
