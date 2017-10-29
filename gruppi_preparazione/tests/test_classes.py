@@ -1,5 +1,6 @@
 import pytest
 import random
+import datetime
 import gruppi_preparazione.classes as gr
 
 
@@ -48,3 +49,26 @@ def test_allmembers_groups():
     assert len(allmembers.get_groups(5, 'saturday')) == 3
     assert [('Maria',), ('Marcelo', 'Chantal'), ('Enrique', 'Concha')] in \
         allmembers.get_groups(5, 'saturday')
+
+
+def test_Weekdays_finder():
+    pass
+
+
+def test_get_next_weekday():
+    days = gr.WeekdaysFinder()
+
+    assert isinstance(days.get_next_weekday(3), datetime.date)
+    assert isinstance(days.get_next_weekday('wednesday'), datetime.date)
+    assert isinstance(days.get_next_weekday('monday'), datetime.date)
+    assert isinstance(days.get_next_weekday('Saturday'), datetime.date)
+
+    with pytest.raises(ValueError):
+        days.get_next_weekday('')
+        days.get_next_weekday(8)
+        days.get_next_weekday('whatever')
+        days.get_next_weekday('sunday')
+
+    assert days.get_next_weekday('wednesday').weekday() == 2
+    assert days.get_next_weekday('saturday').weekday() == 5
+

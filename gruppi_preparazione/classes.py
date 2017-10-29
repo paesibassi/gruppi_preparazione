@@ -1,5 +1,7 @@
 import json
 import random
+import datetime
+import calendar
 
 
 class AllMembers:
@@ -70,10 +72,34 @@ class AllMembers:
         return None
 
 
+class WeekdaysFinder:
+    def __init__(self):
+        self.days = {x[1]: x[0] for x in enumerate(calendar.day_name)}
+
+    def get_next_weekday(self, weekday):
+        """
+        This method accepts as argument a weekday
+        Returns the next date of the corresponding weekday
+        """
+        try:
+            assert isinstance(weekday, (str, int))
+            assert weekday != ''
+        except AssertionError:
+            raise ValueError('Weekday is accepted as either string or integer value')
+
+        if type(weekday) is str:
+            weekday = self.days.get(weekday.capitalize())
+
+        dt = datetime.date.today()
+        while dt.weekday() != weekday:
+            dt += datetime.timedelta(1)
+
+        return dt
+
+
 def main():
-    path = 'tests/members_example.json'
-    all_members = AllMembers(path)
-    all_members.print_groups(4, 'sunday')
+    days = WeekdaysFinder()
+    print(days.get_next_weekday('Friday'))
 
 
 if __name__ == '__main__':
