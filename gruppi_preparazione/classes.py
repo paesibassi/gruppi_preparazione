@@ -96,10 +96,39 @@ class WeekdaysFinder:
 
         return dt
 
+    def generator_weekday(self, weekday, startdate=None, howmany=4):
+        try:
+            assert isinstance(weekday, (str, int))
+            assert weekday != ''
+        except AssertionError:
+            raise ValueError('Weekday is accepted as either string or integer value')
+
+        if type(weekday) is str:
+            weekday = self.days.get(weekday.capitalize())
+
+        if startdate is None:
+            startdate = datetime.date.today()
+        else:
+            try:
+                assert isinstance(startdate, str)
+                startdate = [i for i in map(int, startdate.split('-'))]
+                assert len(startdate) == 3
+                startdate = datetime.date(startdate[0], startdate[1], startdate[2])
+            except AssertionError:
+                raise ValueError('Startdate must be a string in the form yyyy-mm-d')
+
+        num, dt = 0, startdate + datetime.timedelta(1)
+        while num < howmany:
+            while dt.weekday() != weekday:
+                dt += datetime.timedelta(1)
+            yield dt
+            num += 1
+            dt += datetime.timedelta(1)
+
 
 def main():
     days = WeekdaysFinder()
-    print(days.get_next_weekday('Friday'))
+    print([y for y in days.generator_weekday('saturday', '2017-10-29', 5)])
 
 
 if __name__ == '__main__':

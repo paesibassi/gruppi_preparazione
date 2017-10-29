@@ -1,6 +1,7 @@
 import pytest
 import random
 import datetime
+import collections
 import gruppi_preparazione.classes as gr
 
 
@@ -51,7 +52,7 @@ def test_allmembers_groups():
         allmembers.get_groups(5, 'saturday')
 
 
-def test_Weekdays_finder():
+def test_weekdays_finder():
     pass
 
 
@@ -72,3 +73,18 @@ def test_get_next_weekday():
     assert days.get_next_weekday('wednesday').weekday() == 2
     assert days.get_next_weekday('saturday').weekday() == 5
 
+
+def test_generator_weekday():
+    days = gr.WeekdaysFinder()
+
+    assert isinstance(days.generator_weekday('saturday'), collections.Generator)
+    assert [y for y in days.generator_weekday('saturday', '2017-11-5')] == \
+           [datetime.date(2017, 11, 11),
+            datetime.date(2017, 11, 18),
+            datetime.date(2017, 11, 25),
+            datetime.date(2017, 12, 2)]
+    assert [y for y in days.generator_weekday('thursday', '2017-11-3', 1)] == \
+           [datetime.date(2017, 11, 9)]
+    with pytest.raises(ValueError):
+        print([y for y in days.generator_weekday('thursday', 2017113)])
+        print([y for y in days.generator_weekday('thursday', '2017113')])
