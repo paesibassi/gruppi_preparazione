@@ -1,0 +1,35 @@
+{
+  "name": "Ad Gentes Amsterdam",
+  "members": [
+    "Patsy",
+    "Emilio & Nieves",
+    "Idalia",
+    "Stephen & Lyda",
+    "Delbert",
+    "Tod & Tod",
+    "Josefa",
+    "Cheyenne",
+    "Jose & Dionne",
+    "Melissia",
+    "Melissia",
+    "Mark & Alysha",
+    "Zena",
+    "Shaq & Ouida"
+  ],
+  "exclusions": {
+    "wednesday": [
+      "Patsy"
+    ],
+    "saturday": [
+      "Patsy",
+      "Delbert",
+      "Cheyenne",
+      "Zena",
+      "Shaq & Ouida"
+    ],
+    "sunday": [
+      "Stephen & Lyda"
+    ]
+  }
+}
+

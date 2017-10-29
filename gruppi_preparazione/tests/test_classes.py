@@ -20,16 +20,16 @@ def test_allmembers_members():
 
     assert len(allmembers.get_members()) == 14
 
-    assert ('Federico', 'Teresa') in allmembers.get_members()
-    assert ('Giancarlo',) in allmembers.get_members()
+    assert ('Stephen', 'Lyda') in allmembers.get_members()
+    assert ('Delbert',) in allmembers.get_members()
 
     assert len(allmembers.get_members('wednesday')) == 13
-    assert ('Ana',) not in allmembers.get_members('wednesday')
-    assert ('Giancarlo',) in allmembers.get_members('wednesday')
-    assert ('Giancarlo',) not in allmembers.get_members('saturday')
+    assert ('Patsy',) not in allmembers.get_members('wednesday')
+    assert ('Delbert',) in allmembers.get_members('wednesday')
+    assert ('Delbert',) not in allmembers.get_members('saturday')
 
     assert len(allmembers.get_members('sunday')) == 13
-    assert ('Federico', 'Teresa') not in allmembers.get_members('sunday')
+    assert ('Stephen', 'Lyda') not in allmembers.get_members('sunday')
 
     with pytest.raises(ValueError):
         allmembers.get_members('another')
@@ -44,10 +44,10 @@ def test_allmembers_groups():
     assert isinstance(allmembers.get_groups(), list)
     assert isinstance(allmembers.get_groups(5), list)
     assert isinstance(allmembers.get_groups(3, 'wednesday'), list)
-    assert [('Federico', 'Teresa'), ('Philippe',)] in allmembers.get_groups(3)
+    assert [('Stephen', 'Lyda'), ('Zena',)] in allmembers.get_groups(3)
     assert len(allmembers.get_groups(3)) == 6
     assert len(allmembers.get_groups(5, 'saturday')) == 3
-    assert [('Maria',), ('Marcelo', 'Chantal'), ('Enrique', 'Concha')] in \
+    assert [('Melissia',), ('Jose', 'Dionne'), ('Emilio', 'Nieves')] in \
         allmembers.get_groups(5, 'saturday')
 
 
