@@ -53,6 +53,11 @@ class AllMembers:
             groups.append(group)
         return groups
 
+    def get_groups_list(self, members_per_group=4, weekday=None):
+        groups = self.get_groups(members_per_group, weekday)
+        groups_list = [[' & '.join(member) for member in group] for group in groups]
+        return groups_list
+
     def print_groups(self, members_per_group=4, weekday=None):
         groups = self.get_groups(members_per_group, weekday)
         for g, group in enumerate(groups, start=1):
@@ -127,8 +132,11 @@ class WeekdaysFinder:
 
 
 def main():
-    days = WeekdaysFinder()
-    print([y for y in days.generator_weekday('saturday', '2017-10-29', 5)])
+    grs = AllMembers('../persone.json').get_groups_list(4, 'wednesday')
+    gen = WeekdaysFinder().generator_weekday('wednesday', '2017-10-29', len(grs))
+
+    for date, group in zip(gen, grs):
+        print('Wednesday {d}: {g}'.format(d=date, g=', '.join(group)))
 
 
 if __name__ == '__main__':

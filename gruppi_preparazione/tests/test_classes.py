@@ -52,6 +52,23 @@ def test_allmembers_groups():
         allmembers.get_groups(5, 'saturday')
 
 
+def test_get_groups_list():
+    path = './members_example.json'
+    allmembers = gr.AllMembers(path)
+
+    random.seed(12345)
+
+    assert isinstance(allmembers.get_groups_list(), list)
+    assert isinstance(allmembers.get_groups_list(5), list)
+    m = allmembers.get_groups_list(3, 'wednesday')
+    assert isinstance(m, list)
+    assert ['Stephen & Lyda', 'Zena'] in m
+    assert len(m) == 6
+    n = allmembers.get_groups_list(5, 'saturday')
+    assert len(n) == 3
+    assert ['Melissia', 'Stephen & Lyda', 'Jose & Dionne'] in n
+
+
 def test_weekdays_finder():
     pass
 
