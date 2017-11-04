@@ -15,11 +15,12 @@ def get_arguments():
 
 def assign_arguments():
     args = get_arguments()
-    path = args.get('file')
-    weekday = args.get('weekday')
-    print('Genero gruppi escludendo membri per il giorno: {w}'.format(w=weekday))
-    members_per_group = args.get('number')
-    print('Genero gruppi di {n} persone'.format(n=members_per_group))
+    args = dict((k, args[k]) for k in args if args[k] is not None) # deletes the None values
+    path = args.get('file', './gruppi_preparazione/tests/members_example.json')
+    members_per_group = args.get('number', 4)
+    print('Generating groups of {n} people'.format(n=members_per_group))
+    weekday = args.get('weekday', 'saturday')
+    print('Generating groups excluding members for weekday: {w}'.format(w=weekday))
     return path, members_per_group, weekday
 
 
