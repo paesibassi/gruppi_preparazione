@@ -1,3 +1,6 @@
 gruppienv/*
 Pipfile*
-.vscode/
+.vscode/*
+.cache/*
+.idea/*
+persone.json
