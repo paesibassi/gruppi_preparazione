@@ -95,7 +95,7 @@ def test_generator_weekday():
     days = gr.WeekdaysFinder()
 
     assert isinstance(days.generator_weekday('saturday'), collections.Generator)
-    assert [y for y in days.generator_weekday('saturday', '2017-11-5')] == \
+    assert [y for y in days.generator_weekday('saturday', '2017-11-5', 4)] == \
            [datetime.date(2017, 11, 11),
             datetime.date(2017, 11, 18),
             datetime.date(2017, 11, 25),
@@ -103,5 +103,15 @@ def test_generator_weekday():
     assert [y for y in days.generator_weekday('thursday', '2017-11-3', 1)] == \
            [datetime.date(2017, 11, 9)]
     with pytest.raises(ValueError):
-        print([y for y in days.generator_weekday('thursday', 2017113)])
-        print([y for y in days.generator_weekday('thursday', '2017113')])
+        print([y for y in days.generator_weekday('thursday', 2017113, 4)])
+        print([y for y in days.generator_weekday('thursday', '2017113', 4)])
+
+    dates_gen = days.generator_weekday('saturday', '2017-11-22')
+    assert next(dates_gen) == datetime.date(2017, 11, 25)
+    assert next(dates_gen) == datetime.date(2017, 12, 2)
+
+def test_full_calendar():
+    wk = gr.WeekdaysFinder()
+
+    #TODO: implement unit tests for wk.full_calendar()
+    # assert isinstance(wk.full_calendar('november'), list)
