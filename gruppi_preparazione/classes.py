@@ -1,4 +1,5 @@
 import json
+import itertools
 import random
 import datetime
 import calendar
@@ -204,6 +205,7 @@ class WeekdaysFinder:
         combo = {day: (self.generator_weekday(day, startdate=startdate),
                        groups.get_groups_list(members, day)
                        ) for day, members in wds.items()}
+
         result_dict = {}
         for weekday, value in combo.items():
             dates, groups = value
@@ -215,7 +217,7 @@ class WeekdaysFinder:
             days[key] = self.get_next_weekday(key, startdate=startdate)
         sorted_days = sorted(days, key=days.get)
         sorted_lists = [result_dict[day] for day in sorted_days]
-        result = [item for pair in zip(*sorted_lists) for item in pair]
+        result = [item for pair in itertools.zip_longest(*sorted_lists, fillvalue='No more members') for item in pair]
 
         return result
 
@@ -226,9 +228,7 @@ def main():
     # for date, group in zip(gen, grs):
     #     print('Wednesday {d}: {g}'.format(d=date, g=', '.join(group)))
     wk = WeekdaysFinder()
-    for x in wk.full_calendar(AllMembers('tests/members_example.json'), 'november'):
-        print(x)
-    for x in wk.full_calendar(AllMembers('tests/members_example.json'), 'december'):
+    for x in wk.full_calendar(AllMembers('tests/members_example.json'), 'september'):
         print(x)
 
 
