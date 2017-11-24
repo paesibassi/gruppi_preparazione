@@ -1,6 +1,7 @@
 gruppienv/*
 Pipfile*
-.vscode/*
-.cache/*
-.idea/*
+.vscode
+.cache
+.idea
+__pycache__/
 persone.json
