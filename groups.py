@@ -35,9 +35,9 @@ class ArgParser:
         print('='*70)
         print('Verbose option is ON')
         print('Read the members data from the file at {p}'.format(p=path))
-        if self.args_dict.get('output_type') == 'month':
+        if output_type == 'month':
             print('Generate groups for the month of {m}'.format(m=calendar.month_name[month]))
-        elif self.args_dict.get('output_type') == 'groups':
+        elif output_type == 'groups':
             print('Generating groups of {n} people'.format(n=members_per_group))
             print('Generating groups excluding members for weekday: {w}'.format(w=weekday))
         print('='*70)
@@ -158,24 +158,24 @@ class WeekdaysFinder:
         except AssertionError:
             raise ValueError('Weekday is accepted as either string or integer value')
 
-        if type(weekday) is str:
+        if isinstance(weekday, str):
             weekday = self.days.get(weekday.capitalize())
 
         if start_date is None:
-            dt = date.today()
+            day_date = date.today()
         else:
             try:
                 assert isinstance(start_date, str)
                 start_date = [i for i in map(int, start_date.split('-'))]
                 assert len(start_date) == 3
-                dt = date(start_date[0], start_date[1], start_date[2])
+                day_date = date(start_date[0], start_date[1], start_date[2])
             except AssertionError:
                 raise ValueError('Start date must be a string in the form yyyy-mm-d')
 
-        while dt.weekday() != weekday:
-            dt += timedelta(1)
+        while day_date.weekday() != weekday:
+            day_date += timedelta(1)
 
-        return dt
+        return day_date
 
     def generator_weekday(self, weekday, start_date=None, how_many=1000):
         """
@@ -193,7 +193,7 @@ class WeekdaysFinder:
         except AssertionError:
             raise ValueError('Weekday is accepted as either string or integer value')
 
-        if type(weekday) is str:
+        if isinstance(weekday, str):
             weekday = self.days.get(weekday.capitalize())
 
         if start_date is None:
@@ -207,13 +207,13 @@ class WeekdaysFinder:
             except AssertionError:
                 raise ValueError('Start date must be a string in the form yyyy-mm-d')
 
-        num, dt = 0, start_date
+        num, day_date = 0, start_date
         while num < how_many:
-            while dt.weekday() != weekday:
-                dt += timedelta(1)
-            yield dt
+            while day_date.weekday() != weekday:
+                day_date += timedelta(1)
+            yield day_date
             num += 1
-            dt += timedelta(1)
+            day_date += timedelta(1)
 
 
 class MonthCalendarGroups:
@@ -233,7 +233,7 @@ class MonthCalendarGroups:
         except AssertionError:
             raise ValueError('Month is accepted as either string or integer value')
 
-        if type(month) is str:
+        if isinstance(month, str):
             month = self.wkd.months.get(month.capitalize())
 
         current_year = date.today().year  # get current year
@@ -243,13 +243,13 @@ class MonthCalendarGroups:
 
         combo = {day: (self.wkd.generator_weekday(day, start_date=start_date),
                        self.members.get_groups_list(members, day)
-                       ) for day, members in wds.items()}
+                      ) for day, members in wds.items()}
 
         result_dict = {}
         for weekday, value in combo.items():
             dates, groups = value
-            result_dict[weekday] = ['{wday} {date}: '.format(wday=weekday.capitalize(), date=dt) +
-                                    ', '.join(group) for (dt, group) in zip(dates, groups)]
+            result_dict[weekday] = ['{wday} {date}: '.format(wday=weekday.capitalize(), date=day_date) +
+                                    ', '.join(group) for (day_date, group) in zip(dates, groups)]
 
         days = {x: x for x in wds.keys()}
         for key in days:
@@ -267,9 +267,9 @@ def main():
     members = AllMembers(path)
 
     if output_type == 'groups':
-        [print(x) for x in members.printable_groups(members_per_group, weekday)]
+        print(*members.printable_groups(members_per_group, weekday), sep='\n')
     elif output_type == 'month':
-        [print(x) for x in MonthCalendarGroups(members).printable_full_calendar(month)]
+        print(*MonthCalendarGroups(members).printable_full_calendar(month), sep='\n')
 
 
 if __name__ == '__main__':
