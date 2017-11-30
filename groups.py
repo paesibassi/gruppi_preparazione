@@ -217,21 +217,16 @@ class WeekdaysFinder:
 
 
 class MonthCalendarGroups:
-    def __init__(self, members):
+    """
+    Returns a calendar for the full month
+    :param members:
+    :param month:
+    :param weekdays:
+    :return:
+    """
+    def __init__(self, members, month, weekdays=(('wednesday', 4), ('saturday', 3))):
         self.members = members
         self.wkd = WeekdaysFinder()
-
-    def printable_full_calendar(self, month, weekdays=(('wednesday', 4), ('saturday', 3))):
-        """
-        Returns a calendar for the full month
-        :param month:
-        :param weekdays:
-        :return:
-        """
-        try:
-            assert isinstance(month, (str, int))
-        except AssertionError:
-            raise ValueError('Month is accepted as either string or integer value')
 
         if isinstance(month, str):
             month = self.wkd.months.get(month.capitalize())
@@ -259,7 +254,10 @@ class MonthCalendarGroups:
         zipped_list = zip_longest(*sorted_lists, fillvalue='No more groups for this weekday')
         result = [item for pair in zipped_list for item in pair]
 
-        return result
+        self.full_calendar = result
+
+    def __str__(self):
+        return '\n'.join(self.full_calendar)
 
 
 def main():
@@ -269,7 +267,7 @@ def main():
     if output_type == 'groups':
         print(*members.printable_groups(members_per_group, weekday), sep='\n')
     elif output_type == 'month':
-        print(*MonthCalendarGroups(members).printable_full_calendar(month), sep='\n')
+        print(MonthCalendarGroups(members, month))
 
 
 if __name__ == '__main__':
