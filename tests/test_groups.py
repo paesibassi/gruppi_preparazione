@@ -1,7 +1,10 @@
-import pytest
 import random
 import datetime
 import collections
+import sys
+import argparse
+import pytest
+sys.path.append('.')
 import groups as gr
 
 
@@ -32,7 +35,7 @@ def test_allmembers_init(capsys):
 
 
 def test_allmembers_members():
-    path = './members_example.json'
+    path = 'tests/members_example.json'
     allmembers = gr.AllMembers(path)
 
     assert len(allmembers.get_members()) == 14
@@ -53,7 +56,7 @@ def test_allmembers_members():
 
 
 def test_allmembers_groups():
-    path = './members_example.json'
+    path = 'tests/members_example.json'
     allmembers = gr.AllMembers(path)
 
     random.seed(12345)
@@ -69,7 +72,7 @@ def test_allmembers_groups():
 
 
 def test_get_groups_list():
-    path = './members_example.json'
+    path = 'tests/members_example.json'
     allmembers = gr.AllMembers(path)
 
     random.seed(12345)
