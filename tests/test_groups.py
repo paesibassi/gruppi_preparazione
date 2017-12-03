@@ -106,8 +106,13 @@ def test_get_next_weekday():
         days.get_next_weekday('whatever')
         days.get_next_weekday('sunday')
 
+        days.get_next_weekday('wednesday', '')
+        days.get_next_weekday('wednesday', '2017')
+        days.get_next_weekday('wednesday', 2017)
+
     assert days.get_next_weekday('wednesday').weekday() == 2
     assert days.get_next_weekday('saturday').weekday() == 5
+    assert days.get_next_weekday('saturday', '2017-12-01') == datetime.date(2017, 12, 2)
 
 
 def test_generator_weekday():
