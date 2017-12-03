@@ -30,7 +30,7 @@ class ArgParser:
         self.args = vars(self.parser.parse_args())
         self.args_dict = dict((k, self.args[k]) for k in self.args if self.args[k] is not None)  # deletes None values
 
-    def _print_options(self, options):
+    def _print_options(self, options):  # pragma: no cover
         output_type, path, members_per_group, weekday, month = options
         print('='*70)
         print('Verbose option is ON')
@@ -270,5 +270,5 @@ def main():
         print(MonthCalendarGroups(members, month))
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     main()
