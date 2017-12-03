@@ -6,9 +6,14 @@ before_script:
 
 test:
   script:
+  - pip install pytest
+  - pip install pytest-cov
+  - python setup.py install
   - python setup.py test
-  - pip install tox flake8  # you can also use tox
-  - tox -e py36,flake8
+  - py.test --cov-report term --cov=groups --cov-branch tests
+
+#  - pip install tox flake8  # you can also use tox
+#  - tox -e py36,flake8
 
 run:
   script:
@@ -19,14 +24,5 @@ run:
   artifacts:
     paths:
     - dist/*.whl
-
-pages:
-  script:
-  - pip install sphinx sphinx-rtd-theme
-  - cd doc ; make html
-  - mv build/html/ ../public/
-  artifacts:
-    paths:
-    - public
   only:
   - master
