@@ -18,12 +18,6 @@ def test_get_arguments():
     # assert vars.get('number') == 3
 
 
-def test_assign_arguments(capsys):
-    pass
-    # out, err = capsys.readouterr()
-    # assert out == 'Must provide a file path, returning empty list\n'
-
-
 def test_allmembers_init(capsys):
     gr.AllMembers()
     out, err = capsys.readouterr()
@@ -88,8 +82,21 @@ def test_get_groups_list():
     assert ['Melissia', 'Stephen & Lyda', 'Jose & Dionne'] in n
 
 
-def test_weekdays_finder():
-    pass
+def test_printable_groups():
+    path = 'tests/members_example.json'
+    allmembers = gr.AllMembers(path)
+
+    random.seed(12345)
+
+    assert isinstance(allmembers.printable_groups(), list)
+    assert isinstance(allmembers.printable_groups(6), list)
+    m = allmembers.printable_groups(3, 'wednesday')
+    assert isinstance(m, list)
+    assert 'Stephen & Lyda, Zena' in m
+    assert len(m) == 6
+    n = allmembers.printable_groups(5, 'saturday')
+    assert len(n) == 3
+    assert 'Melissia, Stephen & Lyda, Jose & Dionne' in n
 
 
 def test_get_next_weekday():
@@ -135,8 +142,34 @@ def test_generator_weekday():
     assert next(dates_gen) == datetime.date(2017, 12, 2)
 
 
-def test_full_calendar():
-    # wk = gr.WeekdaysFinder()
-    # TODO: implement unit tests for wk.full_calendar()
-    # assert isinstance(wk.full_calendar('november'), list)
-    pass
+def test_MonthCalendarGroups(capsys):
+    path = 'tests/members_example.json'
+    members = gr.AllMembers(path)
+
+    nov = gr.MonthCalendarGroups(members, 'november').full_calendar
+    assert isinstance(nov, list)
+    jun = gr.MonthCalendarGroups(members, 'june')
+    print(jun)
+    out, _ = capsys.readouterr()
+    assert 'Wednesday' in out
+    assert 'Saturday' in out
+
+def test_main(mocker, capsys):
+    mocker.patch('argparse.ArgumentParser.parse_args',
+            return_value=argparse.Namespace(
+                output_type='groups',
+                members_json='tests/members_example.json',
+                weekday = 'wednesday',
+                number = 4))
+    gr.main()
+    out, _ = capsys.readouterr()
+    assert 'Stephen & Lyda' in out
+
+    mocker.patch('argparse.ArgumentParser.parse_args',
+            return_value=argparse.Namespace(
+                output_type='month',
+                members_json='tests/members_example.json',
+                month = 'november'))
+    gr.main()
+    out, _ = capsys.readouterr()
+    assert 'Wednesday' in out
