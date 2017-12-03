@@ -1,7 +1,15 @@
 gruppienv/*
+
 Pipfile*
+
 .vscode
 .cache
 .idea
+
+.coverage
+cov_html/
+cov.xml
+
 __pycache__/
+
 persone.json
