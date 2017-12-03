@@ -23,12 +23,16 @@ class ArgParser:
                                  help='Specify how many members per group, default 4')
         self.parser.add_argument('-w', '--weekday', type=str, default='saturday',
                                  help='Specify weekday to remove members, default saturday')
-        self.parser.add_argument('-m', '--month', type=str, default=(date.today().month+1),
+        self.parser.add_argument('-m', '--month', type=str, default=self.default_month(),
                                  help='Specify month to build full calendar, default next month')
         self.parser.add_argument('-v', '--verbose', action='store_true',
                                  help='Verbose output')
         self.args = vars(self.parser.parse_args())
         self.args_dict = dict((k, self.args[k]) for k in self.args if self.args[k] is not None)  # deletes None values
+
+    @staticmethod
+    def default_month():
+        return (1 if date.today().month == 12 else date.today().month+1)
 
     def _print_options(self, options):  # pragma: no cover
         output_type, path, members_per_group, weekday, month = options
@@ -231,7 +235,7 @@ class MonthCalendarGroups:
         if isinstance(month, str):
             month = self.wkd.months.get(month.capitalize())
 
-        current_year = date.today().year  # get current year
+        current_year = date.today().year if month != 1 else date.today().year+1  # get current year
         start_date = '-'.join([str(current_year), str(month), str(1)])
 
         wds = {day: member for (day, member) in weekdays}
