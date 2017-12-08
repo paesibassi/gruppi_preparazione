@@ -1,4 +1,3 @@
-# This file is a template, and might need editing before it works on your project.
 image: python:latest
 
 before_script:
@@ -9,18 +8,15 @@ test:
   - pip install pytest
   - pip install pytest-cov
   - python setup.py install
-  - python setup.py test
-  - py.test --cov-report term --cov=groups --cov-branch tests
+  - py.test --cov-report xml:cov_xml --cov=groups --cov-branch --cov-config .coveragerc
 
 #  - pip install tox flake8  # you can also use tox
 #  - tox -e py36,flake8
 
 run:
   script:
-  - python setup.py bdist_wheel
-  # an alternative approach is to install and run:
-  - pip install dist/*
-  # run the command here
+  - python setup.py build
+  - python setup.py install
   artifacts:
     paths:
     - dist/*.whl
