@@ -9,7 +9,7 @@ test:
   - pip install pytest-cov
   - pip install pytest-mock
   - python setup.py install
-  - py.test --cov-report xml:cov_xml --cov=groups --cov-branch --cov-config .coveragerc
+  - py.test --cov-report term --cov=groups --cov-branch --cov-config .coveragerc
 
 #  - pip install tox flake8  # you can also use tox
 #  - tox -e py36,flake8
