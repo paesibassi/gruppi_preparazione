@@ -26,17 +26,17 @@ def test_allmembers_members():
     """Unit tests for the members method in AllMembers()"""
     allmembers = gr.AllMembers(PATH)
 
-    assert len(allmembers.get_members()) == 14
+    assert len(allmembers.get_members()) == 22
 
     assert ('Stephen', 'Lyda') in allmembers.get_members()
     assert ('Delbert',) in allmembers.get_members()
 
-    assert len(allmembers.get_members('wednesday')) == 13
+    assert len(allmembers.get_members('wednesday')) == 20
     assert ('Patsy',) not in allmembers.get_members('wednesday')
     assert ('Delbert',) in allmembers.get_members('wednesday')
     assert ('Delbert',) not in allmembers.get_members('saturday')
 
-    assert len(allmembers.get_members('sunday')) == 13
+    assert len(allmembers.get_members('sunday')) == 19
     assert ('Stephen', 'Lyda') not in allmembers.get_members('sunday')
 
     with pytest.raises(ValueError):
@@ -52,10 +52,10 @@ def test_allmembers_groups():
     assert isinstance(allmembers.get_groups(), list)
     assert isinstance(allmembers.get_groups(5), list)
     assert isinstance(allmembers.get_groups(3, 'wednesday'), list)
-    assert [('Stephen', 'Lyda'), ('Zena',)] in allmembers.get_groups(3)
-    assert len(allmembers.get_groups(3)) == 6
-    assert len(allmembers.get_groups(5, 'saturday')) == 3
-    assert [('Melissia',), ('Jose', 'Dionne'), ('Emilio', 'Nieves')] in \
+    assert [('Stephen', 'Lyda'), ('Alfonso',)] in allmembers.get_groups(3)
+    assert len(allmembers.get_groups(3)) == 10
+    assert len(allmembers.get_groups(5, 'saturday')) == 5
+    assert [('Corina',), ('Charles', 'Vivienne'), ('Mark', 'Alysha')] in \
         allmembers.get_groups(5, 'saturday')
 
 
@@ -69,11 +69,11 @@ def test_get_groups_list():
     assert isinstance(allmembers.get_groups_list(5), list)
     each = allmembers.get_groups_list(3, 'wednesday')
     assert isinstance(each, list)
-    assert ['Stephen & Lyda', 'Zena'] in each
-    assert len(each) == 6
+    assert ['Tod & Kenya', 'Stephen & Lyda'] in each
+    assert len(each) == 9
     them = allmembers.get_groups_list(5, 'saturday')
-    assert len(them) == 3
-    assert ['Melissia', 'Stephen & Lyda', 'Jose & Dionne'] in them
+    assert len(them) == 5
+    assert ['Mark & Alysha', 'Anthony & Cheryl', 'Olivier'] in them
 
 
 def test_printable_groups():
@@ -86,11 +86,11 @@ def test_printable_groups():
     assert isinstance(allmembers.printable_groups(6), list)
     each = allmembers.printable_groups(3, 'wednesday')
     assert isinstance(each, list)
-    assert 'Stephen & Lyda, Zena' in each
-    assert len(each) == 6
+    assert 'Melissia, Shaq & Ouida' in each
+    assert len(each) == 9
     them = allmembers.printable_groups(5, 'saturday')
-    assert len(them) == 3
-    assert 'Melissia, Stephen & Lyda, Jose & Dionne' in them
+    assert len(them) == 5
+    assert 'Mark & Alysha, Anthony & Cheryl, Olivier' in them
 
 
 def test_get_next_weekday():
