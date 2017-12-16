@@ -9,6 +9,7 @@ Pipfile*
 .coverage
 cov_html/
 cov.xml
+cov_xml
 
 __pycache__/
 
