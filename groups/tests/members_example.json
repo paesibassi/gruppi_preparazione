@@ -6,7 +6,7 @@
     "Idalia",
     "Stephen & Lyda",
     "Delbert",
-    "Tod & Tod",
+    "Tod & Kenya",
     "Josefa",
     "Cheyenne",
     "Jose & Dionne",
@@ -14,11 +14,20 @@
     "Corina",
     "Mark & Alysha",
     "Zena",
-    "Shaq & Ouida"
+    "Shaq & Ouida",
+    "Olivier",
+    "Ken & Georgina",
+    "Greg",
+    "Anthony & Cheryl",
+    "Alfonso",
+    "Vanessa",
+    "Paula",
+    "Charles & Vivienne"
   ],
   "exclusions": {
     "wednesday": [
-      "Patsy"
+      "Patsy",
+      "Ken & Georgina"
     ],
     "saturday": [
       "Patsy",
@@ -28,7 +37,9 @@
       "Shaq & Ouida"
     ],
     "sunday": [
-      "Stephen & Lyda"
+      "Stephen & Lyda",
+      "Alfonso",
+      "Vanessa"
     ]
   }
 }
