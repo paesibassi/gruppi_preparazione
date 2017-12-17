@@ -64,29 +64,58 @@ def test_error_if_missing_member_in_allmembers(allmembers):
         allmembers.get_members('another')
 
 
-def test_allmembers_groups(allmembers):
+@pytest.mark.parametrize(
+    ('args'),  # '[members_per_group','weekday']
+    [[],
+     [5],
+     [3, 'wednesday']
+    ])
+def test_allmembers_groups_type(allmembers, args):
     """Unit tests for the groups method in AllMembers()"""
-    assert isinstance(allmembers.get_groups(), list)
-    assert isinstance(allmembers.get_groups(5), list)
-    assert isinstance(allmembers.get_groups(3, 'wednesday'), list)
-    assert [('Stephen', 'Lyda'), ('Alfonso',)] in allmembers.get_groups(3)
-    assert len(allmembers.get_groups(3)) == 10
-    assert len(allmembers.get_groups(5, 'saturday')) == 5
-    assert [('Corina',), ('Charles', 'Vivienne'), ('Mark', 'Alysha')] in \
-        allmembers.get_groups(5, 'saturday')
+    assert isinstance(allmembers.get_groups(*args), list)
 
 
-def test_get_groups_list(allmembers):
+@pytest.mark.parametrize(
+    ('members', 'members_per_group','weekday'),
+    [([('Idalia',), ('Ken', 'Georgina')], 3, None),
+     ([('Melissia',), ('Idalia',), ('Anthony', 'Cheryl'), ('Olivier',)], 5, 'saturday')
+    ])
+def test_allmembers_groups_members(allmembers, members, members_per_group, weekday):
+    """Unit tests for the groups method in AllMembers()"""
+    assert members in allmembers.get_groups(members_per_group, weekday)
+
+
+@pytest.mark.parametrize(
+    ('number_of_members', 'members_per_group','weekday'),
+    [(10, 3, None),
+     (5, 5, 'saturday')
+    ])
+def test_allmembers_groups_len(allmembers, number_of_members, members_per_group, weekday):
+    """Unit tests for the groups method in AllMembers()"""
+    assert number_of_members == len(allmembers.get_groups(members_per_group, weekday))
+
+
+@pytest.mark.parametrize(
+    ('args'),  # '[members_per_group','weekday']
+    [[],
+     [5],
+     [3, 'wednesday']
+    ])
+def test_get_groups_list_type(allmembers, args):
     """Unit tests for the get_groups as list method in AllMembers()"""
-    assert isinstance(allmembers.get_groups_list(), list)
-    assert isinstance(allmembers.get_groups_list(5), list)
-    each = allmembers.get_groups_list(3, 'wednesday')
-    assert isinstance(each, list)
-    assert ['Tod & Kenya', 'Stephen & Lyda'] in each
-    assert len(each) == 9
-    them = allmembers.get_groups_list(5, 'saturday')
-    assert len(them) == 5
-    assert ['Mark & Alysha', 'Anthony & Cheryl', 'Olivier'] in them
+    assert isinstance(allmembers.get_groups_list(*args), list)
+
+
+@pytest.mark.parametrize(
+    ('number_of_members', 'weekday', 'members', 'length'),
+    [(3, 'wednesday', ['Delbert', 'Zena', 'Stephen & Lyda'], 9),
+     (5, 'saturday', ['Melissia', 'Idalia', 'Anthony & Cheryl', 'Olivier'], 5)
+    ])
+def test_get_groups_list_members(allmembers, number_of_members, weekday, members, length):
+    """Unit tests for the get_groups as list method in AllMembers()"""
+    lists = allmembers.get_groups_list(number_of_members, weekday)
+    assert members in lists
+    assert length == len(lists)
 
 
 def test_printable_groups(allmembers):
