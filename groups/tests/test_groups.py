@@ -9,10 +9,9 @@ import pytest
 sys.path.append('.')
 import groups.groups as gr
 
-PATH = 'groups/tests/members_example.json'
-
 @pytest.fixture
 def allmembers():
+    """Test fixture to set seed and instantiate an AllMembers obj"""
     random.seed(12345)
     return gr.AllMembers('groups/tests/members_example.json')
 
@@ -27,21 +26,40 @@ def test_allmembers_init(capsys):
     assert out == 'Could not find the file, returning empty list\n'
 
 
-def test_allmembers_members(allmembers):
+@pytest.mark.parametrize(
+    ("number_of_members", "weekday"),
+    [(22, None),
+     (20, 'wednesday'),
+     (19, 'sunday')
+    ])
+def test_number_of_members_in_allmembers(allmembers, number_of_members, weekday):
     """Unit tests for the members method in AllMembers()"""
-    assert len(allmembers.get_members()) == 22
+    assert number_of_members == len(allmembers.get_members(weekday))
 
-    assert ('Stephen', 'Lyda') in allmembers.get_members()
-    assert ('Delbert',) in allmembers.get_members()
 
-    assert len(allmembers.get_members('wednesday')) == 20
-    assert ('Patsy',) not in allmembers.get_members('wednesday')
-    assert ('Delbert',) in allmembers.get_members('wednesday')
-    assert ('Delbert',) not in allmembers.get_members('saturday')
+@pytest.mark.parametrize(
+    ("members", "weekday"),
+    [(('Stephen', 'Lyda'), None),
+     (('Delbert',), None),
+     (('Delbert',), 'wednesday')
+    ])
+def test_members_in_allmembers(allmembers, members, weekday):
+    """Unit tests for the members method in AllMembers()"""
+    assert members in allmembers.get_members(weekday)
 
-    assert len(allmembers.get_members('sunday')) == 19
-    assert ('Stephen', 'Lyda') not in allmembers.get_members('sunday')
 
+@pytest.mark.parametrize(
+    ("members", "weekday"),
+    [(('Patsy',), 'wednesday'),
+     (('Delbert',), 'saturday'),
+     (('Stephen', 'Lyda'), 'sunday')
+    ])
+def test_members_not_in_allmembers(allmembers, members, weekday):
+    """Unit tests for the members method in AllMembers()"""
+    assert members not in allmembers.get_members(weekday)
+
+
+def test_error_if_missing_member_in_allmembers(allmembers):
     with pytest.raises(ValueError):
         allmembers.get_members('another')
 
@@ -85,6 +103,7 @@ def test_printable_groups(allmembers):
 
 @pytest.fixture
 def days():
+    """Test fixture to instantiate a WeekdaysFinder obj"""
     return gr.WeekdaysFinder()
 
 def test_get_next_weekday(days):
