@@ -11,6 +11,11 @@ import groups.groups as gr
 
 PATH = 'groups/tests/members_example.json'
 
+@pytest.fixture
+def allmembers():
+    random.seed(12345)
+    return gr.AllMembers('groups/tests/members_example.json')
+
 def test_allmembers_init(capsys):
     """Unit tests for the __init__ method in AllMembers()"""
     gr.AllMembers()
@@ -22,10 +27,8 @@ def test_allmembers_init(capsys):
     assert out == 'Could not find the file, returning empty list\n'
 
 
-def test_allmembers_members():
+def test_allmembers_members(allmembers):
     """Unit tests for the members method in AllMembers()"""
-    allmembers = gr.AllMembers(PATH)
-
     assert len(allmembers.get_members()) == 22
 
     assert ('Stephen', 'Lyda') in allmembers.get_members()
@@ -43,12 +46,8 @@ def test_allmembers_members():
         allmembers.get_members('another')
 
 
-def test_allmembers_groups():
+def test_allmembers_groups(allmembers):
     """Unit tests for the groups method in AllMembers()"""
-    allmembers = gr.AllMembers(PATH)
-
-    random.seed(12345)
-
     assert isinstance(allmembers.get_groups(), list)
     assert isinstance(allmembers.get_groups(5), list)
     assert isinstance(allmembers.get_groups(3, 'wednesday'), list)
@@ -59,12 +58,8 @@ def test_allmembers_groups():
         allmembers.get_groups(5, 'saturday')
 
 
-def test_get_groups_list():
+def test_get_groups_list(allmembers):
     """Unit tests for the get_groups as list method in AllMembers()"""
-    allmembers = gr.AllMembers(PATH)
-
-    random.seed(12345)
-
     assert isinstance(allmembers.get_groups_list(), list)
     assert isinstance(allmembers.get_groups_list(5), list)
     each = allmembers.get_groups_list(3, 'wednesday')
@@ -76,12 +71,8 @@ def test_get_groups_list():
     assert ['Mark & Alysha', 'Anthony & Cheryl', 'Olivier'] in them
 
 
-def test_printable_groups():
+def test_printable_groups(allmembers):
     """Unit tests for the printable groups method in AllMembers()"""
-    allmembers = gr.AllMembers(PATH)
-
-    random.seed(12345)
-
     assert isinstance(allmembers.printable_groups(), list)
     assert isinstance(allmembers.printable_groups(6), list)
     each = allmembers.printable_groups(3, 'wednesday')
@@ -92,11 +83,12 @@ def test_printable_groups():
     assert len(them) == 5
     assert 'Mark & Alysha, Anthony & Cheryl, Olivier' in them
 
+@pytest.fixture
+def days():
+    return gr.WeekdaysFinder()
 
-def test_get_next_weekday():
+def test_get_next_weekday(days):
     """Unit tests for the weekday iterator in WeekdaysFinder()"""
-    days = gr.WeekdaysFinder()
-
     assert isinstance(days.get_next_weekday(3), datetime.date)
     assert isinstance(days.get_next_weekday('wednesday'), datetime.date)
     assert isinstance(days.get_next_weekday('monday'), datetime.date)
@@ -117,10 +109,8 @@ def test_get_next_weekday():
     assert days.get_next_weekday('saturday', '2017-12-01') == datetime.date(2017, 12, 2)
 
 
-def test_generator_weekday():
+def test_generator_weekday(days):
     """Unit tests for the weekday generator in WeekdaysFinder()"""
-    days = gr.WeekdaysFinder()
-
     assert isinstance(days.generator_weekday('saturday'), collections.Generator)
     assert [y for y in days.generator_weekday('saturday', '2017-11-5', 4)] == \
            [datetime.date(2017, 11, 11),
@@ -138,13 +128,11 @@ def test_generator_weekday():
     assert next(dates_gen) == datetime.date(2017, 12, 2)
 
 
-def test_class_monthcalendargroups(capsys):
+def test_class_monthcalendargroups(capsys, allmembers):
     """Unit tests for the class MonthCalendarGroups()"""
-    members = gr.AllMembers(PATH)
-
-    nov = gr.MonthCalendarGroups(members, 'november').full_calendar
+    nov = gr.MonthCalendarGroups(allmembers, 'november').full_calendar
     assert isinstance(nov, list)
-    jun = gr.MonthCalendarGroups(members, 'june')
+    jun = gr.MonthCalendarGroups(allmembers, 'june')
     print(jun)
     out, _ = capsys.readouterr()
     assert 'Wednesday' in out
